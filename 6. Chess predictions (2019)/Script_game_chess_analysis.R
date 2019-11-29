@@ -4,8 +4,6 @@ game_chess <- "https://www.dropbox.com/s/5vrubrqhhvp5kyu/games_chess.csv?dl=1"
 
 getwd() # To check if you want to change the working directory
 
-list.files() # check the files of the set directory
-
 library(data.table)
 library(bluegrafir)
 library(tidyverse)
@@ -101,8 +99,6 @@ glance(m0.2) # tidy model fit with broom
 ########################################################
 
 # La cantidad de jugadas se relaciona con el ganador?
-head(data_chess_train)
-
 describeBy(data_chess_train$turns,
            group = data_chess_train$winner)
 
@@ -134,6 +130,7 @@ mt <- glm(winner ~ turns,
           data = data_chess_train)
 tidy(mt)
 glance(mt)
+lrm(mt)
 # Cuadrática
 mt2 <- glm(winner ~ turns + I(turns^2),
           data = data_chess_train)
@@ -179,7 +176,70 @@ m0.4 <- glm(winner ~ underdog + turns + white_rating,
 
 tidy(m0.4)
 glance(m0.4)
+lrm(m0.4)
+
+#########################################################
+cor.test(data_chess_train$black_rating,data_chess_train$white_rating) # Checking for multi colinearity
+
+# Centering variables to have interpretable zero and be able to eliminate intercept
+data_chess_train$black_rating <- scale(data_chess_train$black_rating, center = T, scale = F)
+data_chess_train$white_rating <- scale(data_chess_train$white_rating, center = T, scale = F)
+data_chess_train$turns <- scale(data_chess_train$turns, center = T, scale = F)
+data_chess_train$opening_ply <- scale(data_chess_train$opening_ply, center = T, scale = F)
+
+m0.5 <- glm(winner ~ underdog + turns + white_rating + black_rating,
+            data = data_chess_train,
+            family = binomial)
+tidy(m0.5)
+glance(m0.5)
+lrm(m0.5)
+
+#########################################################
+#Up to now I could stick with this model. 
+
+names(data_chess_train)
+head(data_chess_train)
+m0.6 <- glm(winner ~ turns + white_rating + black_rating,
+            data = data_chess_train,
+            family = binomial)
+tidy(m0.6)
+glance(m0.6)
+lrm(m0.6)
+
+########################################################
+# Diagnostics
+
+data_chess_test <- data_chess_test %>% 
+  filter(winner != "draw")
+
+data_chess_test$winner <- recode(data_chess_test$winner,
+                                  "white" = "1",
+                                  "black" = "0")
+
+ggplot(data_chess_test, aes(x=turns, y=winner))+
+  geom_point()+
+  theme(panel.background = element_blank()) +
+  labs(x = "Turns",
+       y = "Winner")
+
+describeBy(data_chess_test$turns, data_chess_test$winner)
+
+data_chess_test %>% 
+  filter(turns == 349)
+
+# Aquí lo único que hice fue imputar el outlier con la mediana porque igual está asimétrico
+data_chess_train[data_chess_test$id=="pN0ioHNr",
+                 "turns"] <- 54
 
 
+data_chess_test$black_rating <- scale(data_chess_test$black_rating, center = T, scale = F)
+data_chess_test$white_rating <- scale(data_chess_test$white_rating, center = T, scale = F)
+data_chess_test$turns <- scale(data_chess_test$turns, center = T, scale = F)
 
+describeBy(data_chess_test$turns, data_chess_test$winner)
+
+
+predictions <- predict(m0.6, data_chess_test) # This should be the test set.
+prediction.probabilities <- predictions$posterior[,2]
+head(predictions)
 
