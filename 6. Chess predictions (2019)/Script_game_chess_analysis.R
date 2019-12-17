@@ -11,14 +11,15 @@ library(broom)
 library(caret)
 library(psych)
 library(rms)
+library(klaR)
 
 data_chess <- fread(game_chess, quote = "", fill = T)
 
 # Describe data to understand it
-names(data_chess)
-head(data_chess)
-str(data_chess)
-dim(data_chess)
+# names(data_chess)
+# head(data_chess)
+# str(data_chess)
+# dim(data_chess)
 
 #######################################################
 # Describing the data to understand it better
@@ -69,6 +70,8 @@ data_chess_train$winner <- recode(data_chess_train$winner,
                                "white" = "1",
                                 "black" = "0")
 
+
+# Try with a logistic regression
 
 data_chess_train$winner <- as.numeric(data_chess_train$winner)
 
@@ -197,14 +200,19 @@ lrm(m0.5)
 #########################################################
 #Up to now I could stick with this model. 
 
-names(data_chess_train)
-head(data_chess_train)
 m0.6 <- glm(winner ~ turns + white_rating + black_rating,
             data = data_chess_train,
             family = binomial)
 tidy(m0.6)
 glance(m0.6)
 lrm(m0.6)
+
+# Try with a Naive bayes
+data_chess_train$winner <- as.factor(data_chess_train$winner)
+
+mn1 <- NaiveBayes(winner ~ turns + white_rating + black_rating,
+                  data = data_chess_train)
+
 
 ########################################################
 # Diagnostics
@@ -215,12 +223,6 @@ data_chess_test <- data_chess_test %>%
 data_chess_test$winner <- recode(data_chess_test$winner,
                                   "white" = "1",
                                   "black" = "0")
-
-ggplot(data_chess_test, aes(x=turns, y=winner))+
-  geom_point()+
-  theme(panel.background = element_blank()) +
-  labs(x = "Turns",
-       y = "Winner")
 
 describeBy(data_chess_test$turns, data_chess_test$winner)
 
@@ -236,10 +238,10 @@ data_chess_test$black_rating <- scale(data_chess_test$black_rating, center = T, 
 data_chess_test$white_rating <- scale(data_chess_test$white_rating, center = T, scale = F)
 data_chess_test$turns <- scale(data_chess_test$turns, center = T, scale = F)
 
-describeBy(data_chess_test$turns, data_chess_test$winner)
-
-
 predictions <- predict(m0.6, data_chess_test) # This should be the test set.
 prediction.probabilities <- predictions$posterior[,2]
-head(predictions)
 
+### Model predictions in Naive Bayes ###
+predNB <- mn1 %>% predict(data_chess_test)
+### Model accuracy ###
+mean(predNB$class == data_chess_test$winner)
