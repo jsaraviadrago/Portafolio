@@ -211,6 +211,12 @@ m0.6 <- glm(winner ~ turns + white_rating + black_rating,
 # glance(m0.6)
 lrm(m0.6)
 
+# Try with a Naive bayes
+data_chess_train$winner <- as.factor(data_chess_train$winner)
+
+mn1 <- NaiveBayes(winner ~ turns + white_rating + black_rating,
+                  data = data_chess_train)
+
 ########################################################
 # Diagnostics
 
@@ -244,12 +250,6 @@ data_chess_test[data_chess_test$id=="pN0ioHNr",
 data_chess_test$black_rating <- scale(data_chess_test$black_rating, center = T, scale = F)
 data_chess_test$white_rating <- scale(data_chess_test$white_rating, center = T, scale = F)
 data_chess_test$turns <- scale(data_chess_test$turns, center = T, scale = F)
-
-# Try with a Naive bayes
-data_chess_train$winner <- as.factor(data_chess_train$winner)
-
-mn1 <- NaiveBayes(winner ~ turns + white_rating + black_rating,
-                  data = data_chess_train)
 
 #### Predicting probabilities ####
 
@@ -301,3 +301,4 @@ plot.roc(lda.roc, print.auc = T)
 predNB <- mn1 %>% predict(data_chess_test)
 ### Model accuracy ###
 mean(predNB$class == data_chess_test$winner)
+
