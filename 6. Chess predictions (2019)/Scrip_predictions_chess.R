@@ -14,7 +14,9 @@ library(rms)
 library(e1071) # required for confusion matrix
 library(pROC)
 
-data_chess <- fread(game_chess, quote = "", fill = T)
+data_chess <- fread(game_chess,
+                    quote = "",
+                    fill = T)
 
 # Describe data to understand it
 # names(data_chess)
