@@ -14,6 +14,7 @@ library(psych)
 library(rms)
 library(e1071) # required for confusion matrix
 library(pROC)
+library(klaR)
 
 # Open Data frame
 data_chess <- fread(game_chess,
@@ -279,7 +280,7 @@ predicted.classes <- if_else(probabilities > 0.5, 1,
                              0)
 # Prediction accuracy
 observed.classes <- data_chess_test$winner
-mean(predicted.classes == observed.classes)
+LGR<- mean(predicted.classes == observed.classes)
 
 # Confusion matrix
 table(observed.classes, predicted.classes)
@@ -306,7 +307,7 @@ pred.classes <- pred$class
 obs.classes <- data_chess_test$winner
 
 accuracy <- mean(obs.classes == pred.classes)
-accuracy
+LDA <- accuracy
 
 error <- mean(obs.classes != pred.classes)
 error
@@ -318,7 +319,16 @@ plot.roc(lda.roc, print.auc = T)
 ### Model predictions in Naive Bayes ####
 predNB <- mn1 %>% predict(data_chess_test)
 ### Model accuracy Naive Bayes ####
-mean(predNB$class == data_chess_test$winner)
+NB <- mean(predNB$class == data_chess_test$winner)
 
 ### Model predictions with Support vector machine ####
+predSVM <- msvmnl %>% predict(data_chess_test)
+### Model accuracy Support vector machine ####
+SVMNL <- mean(predSVM == data_chess_test$winner)
 
+### Organizing results to see which one is more precise ####
+
+Table_results <- data.frame(c(SVMNL,NB,LGR,LDA))
+nombres <- names(Table_results)
+Table_results <- tibble(Nombres = nombres,
+                        results = c(SVMNL,NB,LGR,LDA))
