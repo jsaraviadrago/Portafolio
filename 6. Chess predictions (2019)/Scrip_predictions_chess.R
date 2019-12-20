@@ -330,5 +330,5 @@ SVMNL <- mean(predSVM == data_chess_test$winner)
 
 Table_results <- data.frame(c(SVMNL,NB,LGR,LDA))
 nombres <- names(Table_results)
-Table_results <- tibble(Nombres = nombres,
+Table_results <- tibble(Names = nombres,
                         results = c(SVMNL,NB,LGR,LDA))
