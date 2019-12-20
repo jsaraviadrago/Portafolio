@@ -4,6 +4,7 @@ game_chess <- "https://www.dropbox.com/s/5vrubrqhhvp5kyu/games_chess.csv?dl=1"
 
 getwd() # To check if you want to change the working directory
 
+# Open libraries ####
 library(data.table)
 library(bluegrafir)
 library(tidyverse)
@@ -14,6 +15,7 @@ library(rms)
 library(e1071) # required for confusion matrix
 library(pROC)
 
+# Open Data frame
 data_chess <- fread(game_chess,
                     quote = "",
                     fill = T)
@@ -24,7 +26,7 @@ data_chess <- fread(game_chess,
 # str(data_chess)
 # dim(data_chess)
 
-#######################################################
+##
 # # Describing the data to understand it better
 # 
 # # Describing probable outcome variable (winner) 
@@ -48,8 +50,8 @@ data_chess <- fread(game_chess,
 # # Both variables are related to each other
 # #data_chess$opening_eco == data_chess$opening_name
 
-######################################################
-# Create a training set
+##
+## Create a training set ####
 
 set.seed(12345)
 data_chess_samples <-  data_chess$winner %>% 
@@ -74,7 +76,6 @@ data_chess_train <- data_chess_train %>%
 data_chess_train$winner <- recode(data_chess_train$winner,
                                   "white" = "1",
                                   "black" = "0")
-
 
 data_chess_train$winner <- as.numeric(data_chess_train$winner)
 
@@ -102,7 +103,7 @@ data_chess_train$underdog <- factor(data_chess_train$underdog,
 # tidy(m0.2) # tidy table with broom
 # glance(m0.2) # tidy model fit with broom
 
-########################################################
+##
 
 # La cantidad de jugadas se relaciona con el ganador?
 describeBy(data_chess_train$turns,
@@ -154,7 +155,7 @@ data_chess_train$opening_ply <- scale(data_chess_train$opening_ply, center = T, 
 # # El AIC no mejora mucho así que lo dejaría ahí. 
 # 
 # 
-# #########################################################
+# 
 # # Underdog and turns
 # m0.3 <- glm(winner ~ underdog + turns,
 #             data = data_chess_train,
@@ -191,7 +192,7 @@ ggplot(data_chess_train, aes(x = underdog,
 # glance(m0.4)
 # lrm(m0.4)
 
-#########################################################
+##
 #cor.test(data_chess_train$black_rating,data_chess_train$white_rating) # Checking for multi colinearity
 
 
@@ -202,10 +203,10 @@ ggplot(data_chess_train, aes(x = underdog,
 # glance(m0.5)
 # lrm(m0.5)
 
-#########################################################
+##
 #Up to now I could stick with this model. 
 
-
+#### Logistic Regression #####
 m0.6 <- glm(winner ~ turns + white_rating + black_rating,
             data = data_chess_train,
             family = binomial)
@@ -213,14 +214,29 @@ m0.6 <- glm(winner ~ turns + white_rating + black_rating,
 # glance(m0.6)
 lrm(m0.6)
 
-# Try with a Naive bayes
+# Naive bayes ####
 data_chess_train$winner <- as.factor(data_chess_train$winner)
 
 mn1 <- NaiveBayes(winner ~ turns + white_rating + black_rating,
                   data = data_chess_train)
 
-########################################################
-# Diagnostics
+## Support vector machine with Linear Kernel  ####
+data_chess_train$winner <- as.factor(data_chess_train$winner)
+
+msvm <- train(winner ~ turns + white_rating + black_rating,
+              data = data_chess_train, method = "svmLinear",
+              trControl = trainControl("cv", number = 10))
+
+## Support vector machine with None linear Kernel  ####
+msvmnl <- train(winner ~ turns + white_rating + black_rating,
+                data = data_chess_train, method = "svmRadial",
+                trControl = trainControl("cv", number = 10),
+                tuneLength = 4)
+
+# Best parameter to tune
+msvmnl$bestTune
+
+### Diagnostics ####
 
 data_chess_test <- data_chess_test %>% 
   filter(winner != "draw")
@@ -276,7 +292,7 @@ observed.classes <- as.factor(observed.classes)
 confusionMatrix(predicted.classes, observed.classes,
                 positive = "1")
 
-### ROC curve and AUC
+### ROC curve and AUC GLM LDA ####
 res.roc <- roc(observed.classes, probabilities)
 plot.roc(res.roc, print.auc = T)
 
@@ -299,8 +315,10 @@ error
 lda.roc <- roc(obs.classes, prediction.probabilities)
 plot.roc(lda.roc, print.auc = T)
 
-### Model predictions in Naive Bayes ###
+### Model predictions in Naive Bayes ####
 predNB <- mn1 %>% predict(data_chess_test)
-### Model accuracy ###
+### Model accuracy Naive Bayes ####
 mean(predNB$class == data_chess_test$winner)
+
+### Model predictions with Support vector machine ####
 
