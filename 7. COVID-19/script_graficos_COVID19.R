@@ -1,15 +1,18 @@
-wd <- "/Users/home/Downloads/COVID-19"
-setwd(wd)
+rm(list=ls())
 
-list.files()
+COVID_PERU <- "https://www.dropbox.com/s/kkgu43s31nckrn7/PERU_COVID19.csv?dl=1"
 
 library(readxl)
 library(lubridate)
 library(ggplot2)
+library(data.table)
 
 #### Carga de datos y Manipulacion de variables ####
 
-data_COVID <- read_excel("TABLA_CASOS_DIARIOS.xlsx", sheet = 1)
+data_COVID <-fread(COVID_PERU,
+                   quote = "",
+                   fill = T)
+
 head(data.frame(data_COVID))
 str(data_COVID)
 
