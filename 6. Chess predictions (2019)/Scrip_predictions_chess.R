@@ -221,21 +221,7 @@ data_chess_train$winner <- as.factor(data_chess_train$winner)
 mn1 <- NaiveBayes(winner ~ turns + white_rating + black_rating,
                   data = data_chess_train)
 
-## Support vector machine with Linear Kernel  ####
-data_chess_train$winner <- as.factor(data_chess_train$winner)
 
-msvm <- train(winner ~ turns + white_rating + black_rating,
-              data = data_chess_train, method = "svmLinear",
-              trControl = trainControl("cv", number = 10))
-
-## Support vector machine with None linear Kernel  ####
-msvmnl <- train(winner ~ turns + white_rating + black_rating,
-                data = data_chess_train, method = "svmRadial",
-                trControl = trainControl("cv", number = 10),
-                tuneLength = 4)
-
-# Best parameter to tune
-msvmnl$bestTune
 
 ### Diagnostics ####
 
@@ -293,42 +279,21 @@ observed.classes <- as.factor(observed.classes)
 confusionMatrix(predicted.classes, observed.classes,
                 positive = "1")
 
-### ROC curve and AUC GLM LDA ####
+### ROC curve and AUC GLM ####
 res.roc <- roc(observed.classes, probabilities)
 plot.roc(res.roc, print.auc = T)
-
-
-# Example with disciminant analysis
-fit <- lda(winner ~ turns + white_rating + black_rating,
-           data = data_chess_train)
-pred <- predict(fit,data_chess_test)
-prediction.probabilities <- pred$posterior[,2]
-pred.classes <- pred$class
-obs.classes <- data_chess_test$winner
-
-accuracy <- mean(obs.classes == pred.classes)
-LDA <- accuracy
-
-error <- mean(obs.classes != pred.classes)
-error
-
-# Roc curve for lda 
-lda.roc <- roc(obs.classes, prediction.probabilities)
-plot.roc(lda.roc, print.auc = T)
 
 ### Model predictions in Naive Bayes ####
 predNB <- mn1 %>% predict(data_chess_test)
 ### Model accuracy Naive Bayes ####
 NB <- mean(predNB$class == data_chess_test$winner)
 
-### Model predictions with Support vector machine ####
-predSVM <- msvmnl %>% predict(data_chess_test)
-### Model accuracy Support vector machine ####
-SVMNL <- mean(predSVM == data_chess_test$winner)
 
 ### Organizing results to see which one is more precise ####
 
-Table_results <- data.frame(c(SVMNL,NB,LGR,LDA))
-nombres <- names(Table_results)
+Table_results <- data.frame(c(NB,LGR))
+nombres <- c("Logistic Regression", "Naive Bayes")
 Table_results <- tibble(Names = nombres,
-                        results = c(SVMNL,NB,LGR,LDA))
+                        results = c(LGR, NB))
+
+
