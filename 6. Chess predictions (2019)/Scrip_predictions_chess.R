@@ -15,6 +15,7 @@ library(rms)
 library(e1071) # required for confusion matrix
 library(pROC)
 library(klaR)
+library(rpart)
 
 # Open Data frame
 data_chess <- fread(game_chess,
@@ -221,6 +222,14 @@ data_chess_train$winner <- as.factor(data_chess_train$winner)
 mn1 <- NaiveBayes(winner ~ turns + white_rating + black_rating,
                   data = data_chess_train)
 
+# Classiication tree ####
+
+mct <- rpart(winner ~ turns + white_rating + black_rating,
+             data = data_chess_train, method = "class")
+
+par(xpd = NA) # Avoiding clipping the test in another place
+plot(mct)
+text(mct,digits=3)
 
 
 ### Diagnostics ####
