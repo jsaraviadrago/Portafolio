@@ -2,7 +2,7 @@ rm(list=ls())
 # the link dl has to be changed to 1
 game_chess <- "https://www.dropbox.com/s/5vrubrqhhvp5kyu/games_chess.csv?dl=1"
 
-getwd() # To check if you want to change the working directory
+
 
 # Open libraries ####
 library(data.table)
