@@ -17,6 +17,7 @@ library(pROC)
 library(klaR)
 library(rpart)
 
+
 # Open Data frame
 data_chess <- fread(game_chess,
                     quote = "",
@@ -297,12 +298,21 @@ predNB <- mn1 %>% predict(data_chess_test)
 ### Model accuracy Naive Bayes ####
 NB <- mean(predNB$class == data_chess_test$winner)
 
+# Predictions on test set
+
+predmct <- mct %>% 
+  predict(data_chess_test, type = "class")
+### Model accuracy
+CT <- mean(predmct == data_chess_test$winner)
+
+
+
 
 ### Organizing results to see which one is more precise ####
 
-Table_results <- data.frame(c(NB,LGR))
-nombres <- c("Logistic Regression", "Naive Bayes")
+Table_results <- data.frame(c(NB,LGR, CT))
+nombres <- c("Logistic Regression", "Naive Bayes", "Classification trees")
 Table_results <- tibble(Names = nombres,
-                        results = c(LGR, NB))
+                        results = c(LGR, NB, CT))
 
 

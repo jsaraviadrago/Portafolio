@@ -123,6 +123,20 @@ C_Tests_acumulado <- ggplot(data_COVID, aes(x=DIA, y =Testeados))+
   scale_y_continuous(breaks = seq(0, 7000, by = 400), 
                      limits = c(0,7000))
 
+#### Cantidad de tests negativos
+
+C_Tests_negativos <- ggplot(data_COVID, aes(x=DIA, y =Descartados))+
+  geom_line(color = "lightblue")+
+  geom_point(color = "blue")+
+  geom_smooth(method = "loess", formula = 'y ~ x')+
+  theme(panel.background = element_blank(),
+        axis.text.x = element_text(angle = 90, hjust = 1))+
+  xlab(" ")+
+  ylab("Tests negativos acumulados COVID-19")+
+  scale_x_date(breaks='1 day', date_labels = "%e-%m-%Y")+
+  scale_y_continuous(breaks = seq(0, 7000, by = 400), 
+                     limits = c(0,7000))
+
 
 
 
@@ -149,3 +163,15 @@ figure
 ggsave("COVID.png", plot =figure,
        width = 10, height = 10, 
        limitsize = F)
+
+#### Muestras procesadas
+
+figure2 <- ggarrange(C_Tests_acumulado, C_Tests_negativos, C_total, Prop_pos,
+                     labels = c(" ", " ",
+                                " "),
+                     ncol = 2, nrow = 2)
+
+ggsave("COVID_test_procesados.png", plot =figure2,
+       width = 10, height = 10, 
+       limitsize = F)
+
