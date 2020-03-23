@@ -1,11 +1,12 @@
 rm(list=ls())
 
-COVID_PERU <- "https://www.dropbox.com/s/kkgu43s31nckrn7/PERU_COVID19.csv?dl=1"
+COVID_PERU <- "https://www.dropbox.com/s/z3u3svqer7ekxpl/PERU_COVID19.csv?dl=1"
 
 library(readxl)
 library(lubridate)
 library(ggplot2)
 library(data.table)
+library(ggpubr)
 
 #### Carga de datos y Manipulacion de variables ####
 
@@ -14,6 +15,7 @@ data_COVID <-fread(COVID_PERU,
                    fill = T)
 
 head(data.frame(data_COVID))
+#View(data_COVID)
 str(data_COVID)
 
 data_COVID$DIA <- dmy(data_COVID$DIA) #formatear fecha
@@ -42,49 +44,49 @@ data_COVID$Prop_Indidencia_diaria <- (data_COVID$CASOS_diarios/data_COVID$Testea
 
 #### Casos acumulados totales
 
-ggplot(data_COVID, aes(x=DIA, y =NUMERO_CASOS))+
+C_total <- ggplot(data_COVID, aes(x=DIA, y =NUMERO_CASOS))+
   geom_line(color = "lightblue")+
   geom_point(color = "blue")+
   geom_smooth(method = "loess", formula = 'y ~ x')+
   theme(panel.background = element_blank(),
         axis.text.x = element_text(angle = 90, hjust = 1))+
   xlab(" ")+
-  ylab("Casos acumulados COVID-19")+
+  ylab("Casos COVID-19")+
   scale_x_date(breaks='1 day', date_labels = "%e-%m-%Y")+
-  scale_y_continuous(breaks = seq(0, 400, by = 20), 
+  scale_y_continuous(breaks = seq(0, 400, by = 50), 
                      limits = c(0,400))
 
 #### Casos acumulados Lima
 
-ggplot(data_COVID, aes(x=DIA, y =Positivos_Lima))+
+C_Lima <- ggplot(data_COVID, aes(x=DIA, y =Positivos_Lima))+
   geom_line(color = "lightblue")+
   geom_point(color = "blue")+
   geom_smooth(method = "loess", formula = 'y ~ x')+
   theme(panel.background = element_blank(),
         axis.text.x = element_text(angle = 90, hjust = 1))+
   xlab(" ")+
-  ylab("Casos acumulados Lima COVID-19")+
+  ylab("Casos Lima COVID-19")+
   scale_x_date(breaks='1 day', date_labels = "%e-%m-%Y")+
-  scale_y_continuous(breaks = seq(0, 350, by = 20), 
+  scale_y_continuous(breaks = seq(0, 350, by = 50), 
                      limits = c(0,350))
 
 #### Casos acumulados provincia
 
-ggplot(data_COVID, aes(x=DIA, y =Positivos_Provincias))+
+C_Provincia <- ggplot(data_COVID, aes(x=DIA, y =Positivos_Provincias))+
   geom_line(color = "lightblue")+
   geom_point(color = "blue")+
   geom_smooth(method = "loess", formula = 'y ~ x')+
   theme(panel.background = element_blank(),
         axis.text.x = element_text(angle = 90, hjust = 1))+
   xlab(" ")+
-  ylab("Casos acumulados Provincias COVID-19")+
+  ylab("Casos Provincias COVID-19")+
   scale_x_date(breaks='1 day', date_labels = "%e-%m-%Y")+
   scale_y_continuous(breaks = seq(0, 100, by = 20), 
                      limits = c(0,100))
 
 #### Cantidad de tests por día
 
-ggplot(data_COVID, aes(x=DIA, y =Testeados))+
+C_Tests_diarios <- ggplot(data_COVID, aes(x=DIA, y =Testeados))+
   geom_line(color = "lightblue")+
   geom_point(color = "blue")+
   geom_smooth(method = "loess", formula = 'y ~ x')+
@@ -99,7 +101,7 @@ ggplot(data_COVID, aes(x=DIA, y =Testeados))+
 
 #### Crecimiento diario
 
-ggplot(data_COVID, aes(x=DIA, y =CASOS_diarios))+
+Crec_diario <- ggplot(data_COVID, aes(x=DIA, y =CASOS_diarios))+
   geom_line(color = "black")+
   geom_point(color = "red")+
   geom_smooth(method = "loess", formula = 'y ~ x')+
@@ -108,12 +110,12 @@ ggplot(data_COVID, aes(x=DIA, y =CASOS_diarios))+
   xlab(" ")+
   ylab("Crecimiento diario COVID-19")+
   scale_x_date(breaks='1 day', date_labels = "%e-%m-%Y")+
-  scale_y_continuous(breaks = seq(0, 100, by = 5), 
+  scale_y_continuous(breaks = seq(0, 100, by = 20), 
                      limits = c(0,100))
 
 #### Proporción de positivos con respecto a casos testeados por día
 
-ggplot(data_COVID, aes(x=DIA, y =Prop_Indidencia_diaria))+
+Prop_pos <- ggplot(data_COVID, aes(x=DIA, y =Prop_Indidencia_diaria))+
   geom_line(color = "black")+
   geom_point(color = "red")+
   theme(panel.background = element_blank(),
@@ -124,4 +126,13 @@ ggplot(data_COVID, aes(x=DIA, y =Prop_Indidencia_diaria))+
   scale_y_continuous(breaks = seq(0, 100, by = 5), 
                      limits = c(0,100))
 
+#### Juntar todos los graficos en 1 ####
+figure <- ggarrange(C_total, C_Lima, C_Provincia, Crec_diario,
+                    labels = c(" ", " ",
+                               " "),
+                    ncol = 2, nrow = 2)
+figure
 
+ggsave("COVID.png", plot =figure,
+       width = 10, height = 10, 
+       limitsize = F)
