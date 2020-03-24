@@ -10,7 +10,7 @@ library(ggpubr)
 
 #### Carga de datos y Manipulacion de variables ####
 
-data_COVID <-fread(COVID_PERU,
+data_COVID <-read.csv2(COVID_PERU, sep = ",",
                    quote = "",
                    fill = T)
 
@@ -51,8 +51,25 @@ data_COVID$Testeo_diaria[2:nrow(data_COVID)] <-dif_tests # Poner los valores en 
 #### Creacion de proporcion diaria
 
 data_COVID$Prop_diaria_test_caso <- (data_COVID$CASOS_diarios/data_COVID$Testeo_diaria)*100 
-    
-  
+ 
+### Relacion de testeados y casos positivos
+   
+cor.test(data_COVID$Testeo_diaria, 
+         data_COVID$CASOS_diarios)
+
+m1 <- lm(Testeo_diaria ~ -1 + CASOS_diarios, data_COVID)
+summary(m1)
+
+Cor_Casos_tests <- ggplot(data_COVID, aes(x=Testeo_diaria, y=CASOS_diarios))+
+  geom_point()+
+  geom_smooth(method = "lm", formula = 'y ~ x')+
+  theme(panel.background = element_blank())+
+  xlab("Cantidad de tests administrados diariamente")+
+  ylab("Casos positivos diarios") +
+  scale_y_continuous(breaks = seq(0, 100, by = 20), 
+                     limits = c(0,100)) +
+  scale_x_continuous(breaks = seq(0, 1010, by = 100), 
+                     limits = c(0,1010))
 
 #### Graficas ####
 
@@ -67,8 +84,8 @@ C_total <- ggplot(data_COVID, aes(x=DIA, y =NUMERO_CASOS))+
   xlab(" ")+
   ylab("Casos COVID-19")+
   scale_x_date(breaks='1 day', date_labels = "%e-%m-%Y")+
-  scale_y_continuous(breaks = seq(0, 400, by = 50), 
-                     limits = c(0,400))
+  scale_y_continuous(breaks = seq(0, 450, by = 50), 
+                     limits = c(0,450))
 
 #### Casos acumulados Lima
 
@@ -213,11 +230,12 @@ Prop_test_caso_dia <- ggplot(data_COVID, aes(x=DIA, y =data_COVID$Prop_diaria_te
   scale_y_continuous(breaks = seq(0, 100, by = 5), 
                      limits = c(0,100))
 
+#### 23 Marzo
 
 #### Juntar todos los graficos en 1 ####
 figure <- ggarrange(C_total, C_Lima, C_Provincia, Crec_diario,
-                    labels = c(" ", " ",
-                               " "),
+                    labels = c("1", "2",
+                               "3", "4"),
                     ncol = 2, nrow = 2)
 figure
 
@@ -228,8 +246,8 @@ ggsave("COVID.png", plot =figure,
 #### Muestras procesadas
 
 figure2 <- ggarrange(C_Tests_acumulado, C_Tests_negativos, C_total, Prop_pos,
-                     labels = c(" ", " ",
-                                " "),
+                     labels = c("1", "2",
+                                "3", "4"),
                      ncol = 2, nrow = 2)
 
 ggsave("COVID_test_procesados.png", plot =figure2,
@@ -240,11 +258,24 @@ ggsave("COVID_test_procesados.png", plot =figure2,
 
 figure3 <- ggarrange(Casos_diarios_Lima, Casos_diarios_Provincia,
                      C_Tests_diarios, Prop_test_caso_dia,
-                     labels = c(" ", " ",
-                                " "),
+                     labels = c("1", "2",
+                                "3", "4"),
                      ncol = 2, nrow = 2)
 
 ggsave("COVID_test_diarios.png", plot =figure3,
+       width = 10, height = 10, 
+       limitsize = F)
+
+
+#### 24 de Marzo
+
+figure4 <- ggarrange(C_total, Casos_diarios_Lima,
+                     Casos_diarios_Provincia, Cor_Casos_tests,
+                     labels = c("1", "2",
+                                "3", "4"),
+                     ncol = 2, nrow = 2)
+
+ggsave("COVID19_24marzo.png", plot =figure4,
        width = 10, height = 10, 
        limitsize = F)
 
