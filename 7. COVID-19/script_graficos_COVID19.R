@@ -84,8 +84,8 @@ C_total <- ggplot(data_COVID, aes(x=DIA, y =NUMERO_CASOS))+
   xlab(" ")+
   ylab("Casos COVID-19")+
   scale_x_date(breaks='1 day', date_labels = "%e-%m-%Y")+
-  scale_y_continuous(breaks = seq(0, 600, by = 50), 
-                     limits = c(0,600))
+  scale_y_continuous(breaks = seq(0, 650, by = 50), 
+                     limits = c(0,650))
 
 #### Casos acumulados Lima
 
@@ -303,3 +303,15 @@ ggsave("COVID19_26marzo.png", plot =figure6,
        width = 10, height = 10, 
        limitsize = F)
 
+#### 27 de Marzo
+
+
+figure7 <- ggarrange(C_total, Casos_diarios_Lima,
+                     Casos_diarios_Provincia, C_Tests_diarios,
+                     labels = c("1", "2",
+                                "3", "4"),
+                     ncol = 2, nrow = 2)
+
+ggsave("COVID19_27marzo.png", plot =figure7,
+       width = 10, height = 10, 
+       limitsize = F)
