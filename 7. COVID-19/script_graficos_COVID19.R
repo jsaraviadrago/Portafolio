@@ -7,6 +7,7 @@ library(lubridate)
 library(ggplot2)
 library(data.table)
 library(ggpubr)
+library(tidyr)
 
 #### Carga de datos y Manipulacion de variables ####
 
@@ -66,10 +67,10 @@ Cor_Casos_tests <- ggplot(data_COVID, aes(x=Testeo_diaria, y=CASOS_diarios))+
   theme(panel.background = element_blank())+
   xlab("Cantidad de tests administrados diariamente")+
   ylab("Casos positivos diarios") +
-  scale_y_continuous(breaks = seq(0, 100, by = 20), 
-                     limits = c(0,100)) +
-  scale_x_continuous(breaks = seq(0, 1200, by = 100), 
-                     limits = c(0,1200))
+  scale_y_continuous(breaks = seq(0, 300, by = 20), 
+                     limits = c(0,300)) +
+  scale_x_continuous(breaks = seq(0, 1700, by = 100), 
+                     limits = c(0,1700))
 
 #### Graficas ####
 
@@ -84,8 +85,8 @@ C_total <- ggplot(data_COVID, aes(x=DIA, y =NUMERO_CASOS))+
   xlab(" ")+
   ylab("Casos COVID-19")+
   scale_x_date(breaks='1 day', date_labels = "%e-%m-%Y")+
-  scale_y_continuous(breaks = seq(0, 650, by = 50), 
-                     limits = c(0,650))
+  scale_y_continuous(breaks = seq(0, 1500, by = 50), 
+                     limits = c(0,1500))
 
 #### Casos acumulados Lima
 
@@ -98,8 +99,8 @@ C_Lima <- ggplot(data_COVID, aes(x=DIA, y =Positivos_Lima))+
   xlab(" ")+
   ylab("Casos Lima COVID-19")+
   scale_x_date(breaks='1 day', date_labels = "%e-%m-%Y")+
-  scale_y_continuous(breaks = seq(0, 350, by = 50), 
-                     limits = c(0,350))
+  scale_y_continuous(breaks = seq(0, 1000, by = 50), 
+                     limits = c(0,1000))
 
 #### Casos acumulados provincia
 
@@ -112,8 +113,8 @@ C_Provincia <- ggplot(data_COVID, aes(x=DIA, y =Positivos_Provincias))+
   xlab(" ")+
   ylab("Casos Provincias COVID-19")+
   scale_x_date(breaks='1 day', date_labels = "%e-%m-%Y")+
-  scale_y_continuous(breaks = seq(0, 100, by = 20), 
-                     limits = c(0,100))
+  scale_y_continuous(breaks = seq(0, 400, by = 20), 
+                     limits = c(0,400))
 
 #### Crecimiento diario
 
@@ -126,8 +127,8 @@ Crec_diario <- ggplot(data_COVID, aes(x=DIA, y =CASOS_diarios))+
   xlab(" ")+
   ylab("Crecimiento diario COVID-19")+
   scale_x_date(breaks='1 day', date_labels = "%e-%m-%Y")+
-  scale_y_continuous(breaks = seq(0, 100, by = 20), 
-                     limits = c(0,100))
+  scale_y_continuous(breaks = seq(0, 200, by = 20), 
+                     limits = c(0,200))
 
 # Casos diarios en Lima
 
@@ -140,8 +141,8 @@ Casos_diarios_Lima <- ggplot(data_COVID, aes(x=DIA, y =Positivos_Lima_Diarios))+
   xlab(" ")+
   ylab("Crecimiento diario en Lima COVID-19")+
   scale_x_date(breaks='1 day', date_labels = "%e-%m-%Y")+
-  scale_y_continuous(breaks = seq(0, 100, by = 20), 
-                     limits = c(0,100))
+  scale_y_continuous(breaks = seq(0, 200, by = 20), 
+                     limits = c(0,200))
 
 ### Casos provincia diarios
 
@@ -170,8 +171,8 @@ C_Tests_acumulado <- ggplot(data_COVID, aes(x=DIA, y =Testeados))+
   xlab(" ")+
   ylab("Tests realizados acumulados COVID-19")+
   scale_x_date(breaks='1 day', date_labels = "%e-%m-%Y")+
-  scale_y_continuous(breaks = seq(0, 7000, by = 400), 
-                     limits = c(0,7000))
+  scale_y_continuous(breaks = seq(0, 16000, by = 400), 
+                     limits = c(0,16000))
 
 #### Cantidad de tests negativos
 
@@ -184,8 +185,8 @@ C_Tests_negativos <- ggplot(data_COVID, aes(x=DIA, y =Descartados))+
   xlab(" ")+
   ylab("Tests negativos acumulados COVID-19")+
   scale_x_date(breaks='1 day', date_labels = "%e-%m-%Y")+
-  scale_y_continuous(breaks = seq(0, 7000, by = 400), 
-                     limits = c(0,7000))
+  scale_y_continuous(breaks = seq(0, 15000, by = 400), 
+                     limits = c(0,15000))
 
 
 
@@ -214,8 +215,8 @@ C_Tests_diarios <- ggplot(data_COVID, aes(x=DIA, y =Testeo_diaria))+
   xlab(" ")+
   ylab("Testeo diario de COVID-19")+
   scale_x_date(breaks='1 day', date_labels = "%e-%m-%Y")+
-  scale_y_continuous(breaks = seq(0, 1200, by = 200), 
-                     limits = c(0,1200))
+  scale_y_continuous(breaks = seq(0, 2000, by = 200), 
+                     limits = c(0,2000))
 
 ### Proporcion casos testeados con cantidad de positivos diarios
 
@@ -315,3 +316,63 @@ figure7 <- ggarrange(C_total, Casos_diarios_Lima,
 ggsave("COVID19_27marzo.png", plot =figure7,
        width = 10, height = 10, 
        limitsize = F)
+
+##### 1 de Abril
+
+figure8 <- ggarrange(C_total, Casos_diarios_Lima,
+                     Casos_diarios_Provincia, C_Tests_diarios,
+                     labels = c("1", "2",
+                                "3", "4"),
+                     ncol = 2, nrow = 2)
+
+ggsave("COVID19_01abril.png", plot =figure8,
+       width = 10, height = 10, 
+       limitsize = F)
+
+
+#### Consolidado crecimiento Lima, provincia y total ####
+
+data_COVID_consolidado <- data_COVID %>% 
+  select(DIA, Casos_Totales = NUMERO_CASOS,
+         Positivos_Lima,
+         Positivos_Provincias)
+
+
+data_COVID_consolidado <- data_COVID_consolidado %>%
+  pivot_longer(-DIA, 
+               names_to = "Casos", 
+               values_to = "count")
+
+consolidado <- ggplot(data_COVID_consolidado, aes(x=DIA, y =count,
+                                   color = Casos, shape = Casos) )+
+  geom_line(color = "lightblue")+
+  geom_point()+
+  geom_smooth(method = "loess", formula = 'y ~ x')+
+  theme(panel.background = element_blank(),
+        axis.text.x = element_text(angle = 90, hjust = 1),
+        legend.title = element_blank())+
+  xlab(" ")+
+  ylab("Casos COVID-19")+
+  scale_x_date(breaks='1 day', date_labels = "%e-%m-%Y")+
+  scale_y_continuous(breaks = seq(0, 1500, by = 50), 
+                     limits = c(0,1500))
+
+
+###### Example #####
+
+View(gapminder)
+head(data.frame(gapminder))
+
+p <- ggplot(
+  gapminder, 
+  aes(x = gdpPercap, y=lifeExp, size = pop, colour = country)
+) +
+  geom_point(show.legend = FALSE, alpha = 0.7) +
+  scale_color_viridis_d() +
+  scale_size(range = c(2, 12)) +
+  scale_x_log10() +
+  labs(x = "GDP per capita", y = "Life expectancy")
+p
+
+p + transition_time(year) +
+  labs(title = "Year: {frame_time}")
