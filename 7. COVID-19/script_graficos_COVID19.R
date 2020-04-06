@@ -8,6 +8,8 @@ library(ggplot2)
 library(data.table)
 library(ggpubr)
 library(tidyr)
+library(dplyr)
+library(gganimate)
 
 #### Carga de datos y Manipulacion de variables ####
 
@@ -67,10 +69,10 @@ Cor_Casos_tests <- ggplot(data_COVID, aes(x=Testeo_diaria, y=CASOS_diarios))+
   theme(panel.background = element_blank())+
   xlab("Cantidad de tests administrados diariamente")+
   ylab("Casos positivos diarios") +
-  scale_y_continuous(breaks = seq(0, 300, by = 20), 
-                     limits = c(0,300)) +
-  scale_x_continuous(breaks = seq(0, 1700, by = 100), 
-                     limits = c(0,1700))
+  scale_y_continuous(breaks = seq(0, 1000, by = 20), 
+                     limits = c(0,1000)) +
+  scale_x_continuous(breaks = seq(0, 1900, by = 100), 
+                     limits = c(0,1900))
 
 #### Graficas ####
 
@@ -85,8 +87,8 @@ C_total <- ggplot(data_COVID, aes(x=DIA, y =NUMERO_CASOS))+
   xlab(" ")+
   ylab("Casos COVID-19")+
   scale_x_date(breaks='1 day', date_labels = "%e-%m-%Y")+
-  scale_y_continuous(breaks = seq(0, 1500, by = 50), 
-                     limits = c(0,1500))
+  scale_y_continuous(breaks = seq(0, 3000, by = 250), 
+                     limits = c(0,3000))
 
 #### Casos acumulados Lima
 
@@ -99,8 +101,8 @@ C_Lima <- ggplot(data_COVID, aes(x=DIA, y =Positivos_Lima))+
   xlab(" ")+
   ylab("Casos Lima COVID-19")+
   scale_x_date(breaks='1 day', date_labels = "%e-%m-%Y")+
-  scale_y_continuous(breaks = seq(0, 1000, by = 50), 
-                     limits = c(0,1000))
+  scale_y_continuous(breaks = seq(0, 1500, by = 250), 
+                     limits = c(0,1500))
 
 #### Casos acumulados provincia
 
@@ -113,8 +115,8 @@ C_Provincia <- ggplot(data_COVID, aes(x=DIA, y =Positivos_Provincias))+
   xlab(" ")+
   ylab("Casos Provincias COVID-19")+
   scale_x_date(breaks='1 day', date_labels = "%e-%m-%Y")+
-  scale_y_continuous(breaks = seq(0, 400, by = 20), 
-                     limits = c(0,400))
+  scale_y_continuous(breaks = seq(0, 800, by = 50), 
+                     limits = c(0,800))
 
 #### Crecimiento diario
 
@@ -127,8 +129,8 @@ Crec_diario <- ggplot(data_COVID, aes(x=DIA, y =CASOS_diarios))+
   xlab(" ")+
   ylab("Crecimiento diario COVID-19")+
   scale_x_date(breaks='1 day', date_labels = "%e-%m-%Y")+
-  scale_y_continuous(breaks = seq(0, 200, by = 20), 
-                     limits = c(0,200))
+  scale_y_continuous(breaks = seq(0, 600, by = 100), 
+                     limits = c(0,600))
 
 # Casos diarios en Lima
 
@@ -141,8 +143,8 @@ Casos_diarios_Lima <- ggplot(data_COVID, aes(x=DIA, y =Positivos_Lima_Diarios))+
   xlab(" ")+
   ylab("Crecimiento diario en Lima COVID-19")+
   scale_x_date(breaks='1 day', date_labels = "%e-%m-%Y")+
-  scale_y_continuous(breaks = seq(0, 200, by = 20), 
-                     limits = c(0,200))
+  scale_y_continuous(breaks = seq(0, 400, by = 50), 
+                     limits = c(0,400))
 
 ### Casos provincia diarios
 
@@ -155,8 +157,8 @@ Casos_diarios_Provincia <- ggplot(data_COVID, aes(x=DIA, y =Positivos_Provincia_
   xlab(" ")+
   ylab("Crecimiento diario en provincia COVID-19")+
   scale_x_date(breaks='1 day', date_labels = "%e-%m-%Y")+
-  scale_y_continuous(breaks = seq(0, 100, by = 20), 
-                     limits = c(0,100))
+  scale_y_continuous(breaks = seq(0, 600, by = 50), 
+                     limits = c(0,600))
 
 
 
@@ -171,8 +173,8 @@ C_Tests_acumulado <- ggplot(data_COVID, aes(x=DIA, y =Testeados))+
   xlab(" ")+
   ylab("Tests realizados acumulados COVID-19")+
   scale_x_date(breaks='1 day', date_labels = "%e-%m-%Y")+
-  scale_y_continuous(breaks = seq(0, 16000, by = 400), 
-                     limits = c(0,16000))
+  scale_y_continuous(breaks = seq(0, 20000, by = 500), 
+                     limits = c(0,20000))
 
 #### Cantidad de tests negativos
 
@@ -185,8 +187,8 @@ C_Tests_negativos <- ggplot(data_COVID, aes(x=DIA, y =Descartados))+
   xlab(" ")+
   ylab("Tests negativos acumulados COVID-19")+
   scale_x_date(breaks='1 day', date_labels = "%e-%m-%Y")+
-  scale_y_continuous(breaks = seq(0, 15000, by = 400), 
-                     limits = c(0,15000))
+  scale_y_continuous(breaks = seq(0, 18000, by = 500), 
+                     limits = c(0,18000))
 
 
 
@@ -344,35 +346,23 @@ data_COVID_consolidado <- data_COVID_consolidado %>%
                values_to = "count")
 
 consolidado <- ggplot(data_COVID_consolidado, aes(x=DIA, y =count,
-                                   color = Casos, shape = Casos) )+
+                                   group = Casos, color = Casos) )+
   geom_line(color = "lightblue")+
   geom_point()+
-  geom_smooth(method = "loess", formula = 'y ~ x')+
+  #geom_smooth(method = "loess", formula = 'y ~ x')+
   theme(panel.background = element_blank(),
-        axis.text.x = element_text(angle = 90, hjust = 1),
-        legend.title = element_blank())+
-  xlab(" ")+
-  ylab("Casos COVID-19")+
-  scale_x_date(breaks='1 day', date_labels = "%e-%m-%Y")+
-  scale_y_continuous(breaks = seq(0, 1500, by = 50), 
-                     limits = c(0,1500))
+        axis.text.x = element_text(angle = 90, hjust = 1, size = 16),
+        legend.title = element_blank(),
+        axis.text.y = element_text(size = 16))+
+  labs(x = " ", y = "Casos COVID-19", size = 16)+
+  scale_x_date(breaks='3 days', date_labels = "%e-%m-%Y")+
+  scale_y_continuous(breaks = seq(0, 3000, by = 250), 
+                     limits = c(0,3000)) + 
+  transition_reveal(DIA) 
 
 
-###### Example #####
+anim_save("COVID_CONSOLIDADO.gif", consolidado)
 
-View(gapminder)
-head(data.frame(gapminder))
 
-p <- ggplot(
-  gapminder, 
-  aes(x = gdpPercap, y=lifeExp, size = pop, colour = country)
-) +
-  geom_point(show.legend = FALSE, alpha = 0.7) +
-  scale_color_viridis_d() +
-  scale_size(range = c(2, 12)) +
-  scale_x_log10() +
-  labs(x = "GDP per capita", y = "Life expectancy")
-p
 
-p + transition_time(year) +
-  labs(title = "Year: {frame_time}")
+
