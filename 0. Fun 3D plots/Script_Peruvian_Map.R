@@ -34,7 +34,7 @@ MapaPeru <- ggplot(data = dpto_geometry)+
         legend.title = element_blank(), legend.position="none")
                                         
 
-plot_gg(MapaPeru, scale = 250) 
+plot_gg(MapaPeru, width = 4, height = 4, scale = 300, multicore = TRUE) 
 render_movie(filename = "mapa.mp4",
              theta = -45, phi = 30,zoom = 0.5,fov = 130)
 
