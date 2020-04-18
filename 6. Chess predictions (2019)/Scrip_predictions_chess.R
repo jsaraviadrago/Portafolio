@@ -34,21 +34,21 @@ data_chess <- fread(game_chess,
 # 
 # # Describing probable outcome variable (winner) 
 # # Who wins
-# graficat(data_chess$winner)
+# grafi_distribution(data_chess$winner)
 # 
 # # Ways of winning (can be outcome variable)
-# # Reasons for loosing are unbalanced
-# graficat(data_chess$victory_status)
+# # Reasons for losing are unbalanced
+# grafi_distribution(data_chess$victory_status)
 # 
 # # Understanding some variables
 # # NUmber of moves in the opening phase
-# graficat(data_chess$opening_ply)
+# grafi_distribution(data_chess$opening_ply)
 # 
 # # Check the openings types
-# graficat(data_chess$opening_name)
+# grafi_distribution(data_chess$opening_name)
 # 
 # # Standardized code for types of openings
-# graficat(data_chess$opening_eco)
+# grafi_distribution(data_chess$opening_eco)
 # 
 # # Both variables are related to each other
 # #data_chess$opening_eco == data_chess$opening_name
@@ -62,7 +62,7 @@ data_chess_samples <-  data_chess$winner %>%
 data_chess_train <- data_chess[data_chess_samples,]
 data_chess_test <- data_chess[-data_chess_samples,]
 
-# names(data_chess_train)
+
 # dim(data_chess_train)
 # dim(data_chess_test)
 # Calculate variables for underdogs
@@ -73,15 +73,19 @@ data_chess_train <- data_chess_train %>% mutate(
     white_rating < black_rating ~ "white",
     TRUE ~ "No"))
 
+# Filter winner or losers I am not interested in chess games that finished with draws
 data_chess_train <- data_chess_train %>% 
   filter(winner != "draw")
 
+# Recode winners to make analysis
 data_chess_train$winner <- recode(data_chess_train$winner,
                                   "white" = "1",
                                   "black" = "0")
 
+# Recode type of variable
 data_chess_train$winner <- as.numeric(data_chess_train$winner)
 
+# Doing some bivariate analysis to select some variables
 # # It is related to white winning.
 # m0 <- glm(winner ~ white_rating,
 #           data = data_chess_train,
@@ -96,9 +100,11 @@ data_chess_train$winner <- as.numeric(data_chess_train$winner)
 
 # Check how the underdog does against the theoretical better player
 
+# Reorder reference group so whites are the reference group.
 data_chess_train$underdog <- factor(data_chess_train$underdog,
                                     level= c("white","No","black"))
 
+# Bivariate relationship between underdog and winner
 # # Probability of underdog winning
 # m0.2 <- glm(winner ~ underdog, 
 #             data = data_chess_train,
@@ -108,10 +114,11 @@ data_chess_train$underdog <- factor(data_chess_train$underdog,
 
 ##
 
-# La cantidad de jugadas se relaciona con el ganador?
+# Are the amount of plays related to the winner?
 describeBy(data_chess_train$turns,
            group = data_chess_train$winner)
 
+# Make a simple histogram to understand the distribution of winner and amounts of plays
 ggplot(data_chess_train, aes(turns, group = winner))+
   geom_histogram(alpha=0.5, position="identity",
                  bins = 100)+
@@ -119,19 +126,21 @@ ggplot(data_chess_train, aes(turns, group = winner))+
   labs(x = "Cantidad de turno",
        y = "Distribución")
 
-# Hay un super outlier que podría estar jalando la línea
+# Visualize the relationship between winners and turns (super outlier detected)
 ggplot(data_chess_train, aes(x=turns, y=winner))+
   geom_point()+
   theme(panel.background = element_blank()) +
   labs(x = "Turns",
        y = "Winner")
 
+# Check for that outlier in order to recode it. 
 describeBy(data_chess_train$turns, data_chess_train$winner)
 
+# Outlier detected
 data_chess_train %>% 
   filter(turns == 349)
 
-# Aquí lo único que hice fue imputar el outlier con la mediana porque igual está asimétrico
+# Recoding outlier with the median because distributions are pretty skewed, the mean does not represent the center of the distribution
 data_chess_train[data_chess_train$id=="pN0ioHNr",
                  "turns"] <- 54
 
@@ -141,21 +150,23 @@ data_chess_train$white_rating <- scale(data_chess_train$white_rating, center = T
 data_chess_train$turns <- scale(data_chess_train$turns, center = T, scale = F)
 data_chess_train$opening_ply <- scale(data_chess_train$opening_ply, center = T, scale = F)
 
-
-# # Lineal
-# mt <- glm(winner ~ turns,
-#           data = data_chess_train)
+# Check the type of relationship, is it linear, quadratic?
+# # Linear
+#mt <- glm(winner ~ turns,
+#         data = data_chess_train)
+#summary(mt)
 # tidy(mt)
 # glance(mt)
 # lrm(mt)
-# # Cuadrática
+
+# # Quadratic
 # mt2 <- glm(winner ~ turns + I(turns^2),
 #           data = data_chess_train)
 # tidy(mt2)
 # glance(mt2)
 # 
-# # Más turnos menos posibilidad de que las blancas ganen (linelmente).
-# # El AIC no mejora mucho así que lo dejaría ahí. 
+# # Linear relationship seemed to be a good choice AIC does decrease much 
+# 
 # 
 # 
 # 
@@ -168,11 +179,11 @@ data_chess_train$opening_ply <- scale(data_chess_train$opening_ply, center = T, 
 # glance(m0.3)
 # lrm(m0.3) # Pseudo R square
 
-# Underdog, turns and elo (careful with elo and multicollinearity) 
+# Underdog, turns and elo (got to be careful with elo and multicollinearity) 
 
 # check visually elo and underdog
 
-# The image gives ideas that they are related
+# The scatterplot gives ideas that they are related
 ggplot(data_chess_train, aes(x = underdog,
                              y =white_rating))+
   geom_point()+
@@ -180,13 +191,14 @@ ggplot(data_chess_train, aes(x = underdog,
   labs(x ="Underdog",
        y = "White rating")
 
-
+# Trying a simple bivariate analysis of variance to further explore the relationship
 # maov <- aov(white_rating ~ underdog,
 #             data =data_chess_train)
 # tidy(maov) # Results 
 # glance(maov) # The R square does not show relationship
-# TukeyHSD(maov) # They are difference between groups
+# TukeyHSD(maov) # There are difference between groups
 
+# Introducing variables that seem to have a bivariate relationship with winning
 # m0.4 <- glm(winner ~ underdog + turns + white_rating,
 #             data = data_chess_train,
 #             family = binomial)
@@ -196,9 +208,10 @@ ggplot(data_chess_train, aes(x = underdog,
 # lrm(m0.4)
 
 ##
-#cor.test(data_chess_train$black_rating,data_chess_train$white_rating) # Checking for multi colinearity
+#cor.test(data_chess_train$black_rating,
+#data_chess_train$white_rating) # Checking for multi colinearity
 
-
+# Introducing more variables
 # m0.5 <- glm(winner ~ underdog + turns + white_rating + black_rating,
 #             data = data_chess_train,
 #             family = binomial)
@@ -209,6 +222,8 @@ ggplot(data_chess_train, aes(x = underdog,
 ##
 #Up to now I could stick with this model. 
 
+# Lets try some models and different models and techniques to understand the relationship
+
 #### Logistic Regression #####
 m0.6 <- glm(winner ~ turns + white_rating + black_rating,
             data = data_chess_train,
@@ -218,8 +233,10 @@ m0.6 <- glm(winner ~ turns + white_rating + black_rating,
 lrm(m0.6)
 
 # Naive bayes ####
+# Recode to fit the model using Naive Bayes
 data_chess_train$winner <- as.factor(data_chess_train$winner)
 
+# Fitting the model
 mn1 <- NaiveBayes(winner ~ turns + white_rating + black_rating,
                   data = data_chess_train)
 
@@ -243,6 +260,7 @@ data_chess_test$winner <- recode(data_chess_test$winner,
                                  "white" = "1",
                                  "black" = "0")
 
+# Recoding type of variable
 data_chess_test$winner <- as.numeric(data_chess_test$winner)
 
 # Checking for similar relationships between variables 
@@ -255,11 +273,16 @@ ggplot(data_chess_test, aes(x=turns, y=winner))+
 # Checking for similar outliers as the training set. 
 describeBy(data_chess_test$turns, data_chess_test$winner)
 
+# Recoding the outlier
 data_chess_test %>% 
   filter(turns == 349)
 
 data_chess_test[data_chess_test$id=="pN0ioHNr",
                 "turns"] <- 54
+
+# Keeping uncetered value to plot afterwards (this line was typed after I know the result)
+data_chess_test$turns_raw <- data_chess_test$turns
+
 
 # Centering variables as training set
 data_chess_test$black_rating <- scale(data_chess_test$black_rating, center = T, scale = F)
@@ -298,7 +321,7 @@ predNB <- mn1 %>% predict(data_chess_test)
 ### Model accuracy Naive Bayes ####
 NB <- mean(predNB$class == data_chess_test$winner)
 
-# Predictions on test set
+# Predictions on test set with the classification tree
 
 predmct <- mct %>% 
   predict(data_chess_test, type = "class")
@@ -306,13 +329,49 @@ predmct <- mct %>%
 CT <- mean(predmct == data_chess_test$winner)
 
 
-
-
 ### Organizing results to see which one is more precise ####
-
+# Judging by the precission I guess the logistic regresion is the best fitting model
 Table_results <- data.frame(c(NB,LGR, CT))
 nombres <- c("Logistic Regression", "Naive Bayes", "Classification trees")
 Table_results <- tibble(Names = nombres,
                         results = c(LGR, NB, CT))
 
+# Up to how many turns the probability of white winning changes?
 
+data_chess_test$probabilities <-  m0.6 %>% 
+  predict(data_chess_test,
+          type = "response")
+
+ggplot(data_chess_test, aes(x=turns_raw,y =probabilities))+
+  geom_point()+
+  geom_smooth(method = "lm", formula = 'y ~ x')+
+  geom_hline(yintercept=0.5, linetype="dashed", color = "red")+
+  theme(panel.background = element_blank(), 
+        axis.text.x = element_text(angle = 45))+
+  labs(x= "Turns", y = "Probabilities")+
+  scale_y_continuous(breaks = seq(0,1, by = 0.1))+
+  scale_x_continuous(breaks = seq(0,250, by =15))
+
+# Check cutting point
+data_chess_test <- data_chess_test %>%  
+  mutate(
+    Matches_turns = case_when(
+      turns_raw <= 90 ~ "White has more chance of winning",
+      turns_raw > 90 ~ "White has less chance of winning"))
+
+data_chess_test_agregada <- group_by(data_chess_test, Matches_turns) %>%
+  summarise(Cantidad_total = n())
+  
+data_chess_test_agregada_VS <- group_by(data_chess_test, victory_status,
+                                        Matches_turns) %>%
+  summarise(Cantidad = n())
+
+  
+### Getting some proportions of type of victory
+
+data_chess_test_final <- left_join(data_chess_test_agregada_VS,
+                                   data_chess_test_agregada, 
+                                   by = "Matches_turns" )
+
+
+data_chess_test_final$Proporcion <- data_chess_test_final$Cantidad/data_chess_test_final$Cantidad_total
