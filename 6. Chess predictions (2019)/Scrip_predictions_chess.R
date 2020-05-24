@@ -6,7 +6,7 @@ game_chess <- "https://www.dropbox.com/s/5vrubrqhhvp5kyu/games_chess.csv?dl=1"
 
 # Open libraries ####
 library(data.table)
-library(bluegrafir)
+#library(bluegrafir)
 library(tidyverse)
 library(broom)
 library(caret)
@@ -115,16 +115,20 @@ data_chess_train$underdog <- factor(data_chess_train$underdog,
 ##
 
 # Are the amount of plays related to the winner?
-describeBy(data_chess_train$turns,
-           group = data_chess_train$winner)
+#describeBy(data_chess_train$turns,
+#           group = data_chess_train$winner)
 
 # Make a simple histogram to understand the distribution of winner and amounts of plays
-ggplot(data_chess_train, aes(turns, group = winner))+
+hist_cantidad <- ggplot(data_chess_train, aes(turns, group = winner))+
   geom_histogram(alpha=0.5, position="identity",
                  bins = 100)+
   theme(panel.background = element_blank())+
   labs(x = "Cantidad de turno",
        y = "Distribución")
+
+ggsave("hist_cantidad.png", plot= hist_cantidad,
+       width = 7, height = 7,
+       limitsize = F)
 
 # Visualize the relationship between winners and turns (super outlier detected)
 ggplot(data_chess_train, aes(x=turns, y=winner))+
@@ -134,7 +138,7 @@ ggplot(data_chess_train, aes(x=turns, y=winner))+
        y = "Winner")
 
 # Check for that outlier in order to recode it. 
-describeBy(data_chess_train$turns, data_chess_train$winner)
+#describeBy(data_chess_train$turns, data_chess_train$winner)
 
 # Outlier detected
 data_chess_train %>% 
@@ -271,7 +275,7 @@ ggplot(data_chess_test, aes(x=turns, y=winner))+
        y = "Winner")
 
 # Checking for similar outliers as the training set. 
-describeBy(data_chess_test$turns, data_chess_test$winner)
+#describeBy(data_chess_test$turns, data_chess_test$winner)
 
 # Recoding the outlier
 data_chess_test %>% 
@@ -342,15 +346,20 @@ data_chess_test$probabilities <-  m0.6 %>%
   predict(data_chess_test,
           type = "response")
 
-ggplot(data_chess_test, aes(x=turns_raw,y =probabilities))+
+Cut_point <- ggplot(data_chess_test, aes(x=turns_raw,y =probabilities))+
   geom_point()+
   geom_smooth(method = "lm", formula = 'y ~ x')+
   geom_hline(yintercept=0.5, linetype="dashed", color = "red")+
+geom_vline(xintercept = 90, linetype = "dashed", color = "green")+
   theme(panel.background = element_blank(), 
         axis.text.x = element_text(angle = 45))+
   labs(x= "Turns", y = "Probabilities")+
   scale_y_continuous(breaks = seq(0,1, by = 0.1))+
   scale_x_continuous(breaks = seq(0,250, by =15))
+
+ggsave("Cut_point.png", plot = Cut_point,
+       width = 7, height = 7,
+       limitsize = F)
 
 # Check cutting point
 data_chess_test <- data_chess_test %>%  

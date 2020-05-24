@@ -6,6 +6,7 @@ library(rgeos)
 library(dplyr)
 library(rayshader)
 library(av)
+library(rgl)
 
 peru_dpto<-getData('GADM',country='PER',level=1) #Nivel departamento
 
@@ -20,6 +21,7 @@ dpto_geometry <- fperu_dpto %>%
 
 
 ### Mapa del Peru
+rgl.open()
 
 MapaPeru <- ggplot(data = dpto_geometry)+
   geom_sf(fill= "#FF0000", color = "#FFFFFF") +
@@ -33,8 +35,9 @@ MapaPeru <- ggplot(data = dpto_geometry)+
         panel.grid.minor = element_blank(),
         legend.title = element_blank(), legend.position="none")
                                         
-
-plot_gg(MapaPeru, width = 4, height = 4, scale = 300, multicore = TRUE) 
+plot_gg(MapaPeru, width = 4, height = 4, scale = 400,
+        multicore = F) 
 render_movie(filename = "mapa.mp4",
-             theta = -45, phi = 30,zoom = 0.5,fov = 130)
+             theta = -45, phi = seq(90,360, by=2),
+             zoom = 0.5,fov = 130)
 
