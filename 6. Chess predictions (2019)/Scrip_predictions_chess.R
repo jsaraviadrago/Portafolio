@@ -53,6 +53,10 @@ data_chess <- fread(game_chess,
 # # Both variables are related to each other
 # #data_chess$opening_eco == data_chess$opening_name
 
+names(data_chess)
+dim(data_chess)
+prop.table(table(data_chess$winner))
+
 ##
 ## Create a training set ####
 
@@ -127,7 +131,7 @@ hist_cantidad <- ggplot(data_chess_train, aes(turns, group = winner))+
        y = "Distribución")
 
 ggsave("hist_cantidad.png", plot= hist_cantidad,
-       width = 7, height = 7,
+       width = 2, height = 2,
        limitsize = F)
 
 # Visualize the relationship between winners and turns (super outlier detected)
@@ -384,3 +388,7 @@ data_chess_test_final <- left_join(data_chess_test_agregada_VS,
 
 
 data_chess_test_final$Proporcion <- data_chess_test_final$Cantidad/data_chess_test_final$Cantidad_total
+
+
+
+
