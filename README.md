@@ -5,3 +5,5 @@
 3) Factors of engagement and burnout in Jobs 
 4) Psychometric properties of family sense of coherence scale. A multigroup analysis of men and women.
 5) Psychometric properties of the sense of coherence scale. 
+6) Chess predictions
+7) World cup results
