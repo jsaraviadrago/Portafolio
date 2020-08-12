@@ -28,18 +28,17 @@ WC.graph <- WC.graph %>% activate(nodes) %>%
 
 set.seed(1111)
 figure <- ggraph(WC.graph, layout = 'mds') + 
-  geom_edge_fan(color = "grey")+
+  geom_edge_fan(color = "lightblue")+
   geom_node_point(aes(colour = betweenness)) +
   geom_node_text(aes(label = dplyr::if_else(betweenness > 350,
-                                            as.character(name), NA_character_)),
-                 size = 3, repel = T)+
+                                            as.character(name), NA_character_)),size = 3, repel = T)+
 theme_graph() +
   theme(legend.title=element_blank()) +
   scale_color_viridis()
 
-#ggsave("WC_NETWORK_DATA.png", plot =figure,
-#       width = 10, height = 10, 
-#       limitsize = F)
+ggsave("WC_NETWORK_DATA.png", plot =figure,
+       width = 5, height = 5, 
+       limitsize = F)
 
 
 
