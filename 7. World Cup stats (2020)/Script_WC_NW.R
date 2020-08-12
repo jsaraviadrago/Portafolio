@@ -37,8 +37,6 @@ theme_graph() +
   theme(legend.title=element_blank()) +
   scale_color_viridis()
 
-
-
 #ggsave("WC_NETWORK_DATA.png", plot =figure,
 #       width = 10, height = 10, 
 #       limitsize = F)
