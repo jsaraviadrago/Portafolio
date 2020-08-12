@@ -23,20 +23,23 @@ WC_nw <- WC %>%
 WC.graph <- as_tbl_graph(WC_nw, directed = T)
 
 WC.graph <- WC.graph %>% activate(nodes) %>%
-  mutate(centrality = centrality_authority()) 
+  mutate(betweenness = centrality_betweenness(),
+         pagerank = centrality_pagerank()) 
+
+
 
 set.seed(1111)
 figure <- ggraph(WC.graph, layout = 'mds') + 
   geom_edge_fan(aes(colour = as.factor(Year)))+
   geom_node_point(color = "black", size = 0.5) +
-  geom_node_text(aes(label = ifelse(centrality > 0.000000000000000055, as.character(name), NA_character_)),size = 3.5)+
+  geom_node_text(aes(label = ifelse(betweenness > 350, as.character(name), NA_character_)),size = 3, repel = T)+
 theme_graph() +
   theme(legend.title=element_blank())
 
 
-ggsave("WC_NETWORK_DATA.png", plot =figure,
-       width = 10, height = 10, 
-       limitsize = F)
+#ggsave("WC_NETWORK_DATA.png", plot =figure,
+#       width = 10, height = 10, 
+#       limitsize = F)
 
 #####
 
