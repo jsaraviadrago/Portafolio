@@ -7,3 +7,4 @@
 5) Psychometric properties of the sense of coherence scale. 
 6) Chess predictions
 7) World cup results
+8) Sleep training
