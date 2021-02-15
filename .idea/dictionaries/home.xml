@@ -2219,6 +2219,8 @@
       <w>SummaryReporter</w>
       <w>SupremeCourt</w>
       <w>Surv</w>
+      <w>Surv2</w>
+      <w>Surv2data</w>
       <w>Survival</w>
       <w>Sweave</w>
       <w>Sweave.snapshot</w>
@@ -3737,6 +3739,7 @@
       <w>aperm.default</w>
       <w>aperm.table</w>
       <w>appDependencies</w>
+      <w>app_dir</w>
       <w>append</w>
       <w>append.XMLNode</w>
       <w>append.poly</w>
@@ -4317,6 +4320,7 @@
       <w>base64_decode</w>
       <w>base64_enc</w>
       <w>base64_encode</w>
+      <w>base64_uri</w>
       <w>base64decode</w>
       <w>base64enc</w>
       <w>base64encode</w>
@@ -4422,6 +4426,7 @@
       <w>bg_cyan</w>
       <w>bg_green</w>
       <w>bg_magenta</w>
+      <w>bg_process</w>
       <w>bg_red</w>
       <w>bg_white</w>
       <w>bg_yellow</w>
@@ -4538,6 +4543,7 @@
       <w>blake2b</w>
       <w>blake2s</w>
       <w>blame</w>
+      <w>blas.thread.test</w>
       <w>blob</w>
       <w>blob_create</w>
       <w>block.random</w>
@@ -4723,6 +4729,7 @@
       <w>build_wider_spec</w>
       <w>builtin_theme</w>
       <w>builtins</w>
+      <w>bump_version</w>
       <w>bumpchart</w>
       <w>bundle</w>
       <w>bundle_r_package</w>
@@ -5034,6 +5041,8 @@
       <w>check_mnsl</w>
       <w>check_name</w>
       <w>check_new_values</w>
+      <w>check_old_package</w>
+      <w>check_package_name</w>
       <w>check_packages_in_dir</w>
       <w>check_packages_in_dir_changes</w>
       <w>check_packages_in_dir_details</w>
@@ -6018,6 +6027,7 @@
       <w>cylinder3d</w>
       <w>cylindrect</w>
       <w>d.ci</w>
+      <w>d.mvt</w>
       <w>d.robust</w>
       <w>d2cumulant.digamma</w>
       <w>d2r</w>
@@ -6237,6 +6247,7 @@
       <w>degree_distribution</w>
       <w>degseq</w>
       <w>delFromSubscene3d</w>
+      <w>del_empty_dir</w>
       <w>delayGrob</w>
       <w>delayedAssign</w>
       <w>delete.edges</w>
@@ -6601,6 +6612,7 @@
       <w>dmtruncnorm</w>
       <w>dmtrunct</w>
       <w>dmultinom</w>
+      <w>dmvn</w>
       <w>dmvn0</w>
       <w>dmvnorm</w>
       <w>dmvt</w>
@@ -6618,6 +6630,7 @@
       <w>doPrimitiveMethod</w>
       <w>doRenderTags</w>
       <w>do_</w>
+      <w>do_once</w>
       <w>do_paginated_request</w>
       <w>do_request</w>
       <w>docName</w>
@@ -7512,6 +7525,7 @@
       <w>find_gs_cmd</w>
       <w>find_k</w>
       <w>find_package_root_file</w>
+      <w>find_pandoc</w>
       <w>find_panel</w>
       <w>find_remake_root_file</w>
       <w>find_root</w>
@@ -7780,6 +7794,7 @@
       <w>from_incidence_matrix</w>
       <w>from_literal</w>
       <w>from_rmarkdown</w>
+      <w>from_root</w>
       <w>from_wd</w>
       <w>fround</w>
       <w>fruit</w>
@@ -7895,6 +7910,7 @@
       <w>gam.fit</w>
       <w>gam.fit3</w>
       <w>gam.fit5.post.proc</w>
+      <w>gam.mh</w>
       <w>gam.outer</w>
       <w>gam.reparam</w>
       <w>gam.side</w>
@@ -7954,6 +7970,7 @@
       <w>gbayesMixPost</w>
       <w>gbayesMixPowerNP</w>
       <w>gbayesMixPredNoData</w>
+      <w>gbsg</w>
       <w>gc</w>
       <w>gc.time</w>
       <w>gc3d</w>
@@ -8572,6 +8589,7 @@
       <w>github_pat</w>
       <w>github_pull</w>
       <w>github_release</w>
+      <w>github_releases</w>
       <w>github_token</w>
       <w>gitlab</w>
       <w>gitlab_pat</w>
@@ -8763,6 +8781,7 @@
       <w>grenander</w>
       <w>grep</w>
       <w>grepRaw</w>
+      <w>grep_sub</w>
       <w>grepl</w>
       <w>grey</w>
       <w>grey.colors</w>
@@ -8958,6 +8977,7 @@
       <w>guide_train</w>
       <w>guide_transform</w>
       <w>guides</w>
+      <w>gumbls</w>
       <w>guttman</w>
       <w>gvhd10</w>
       <w>gzAzimuth</w>
@@ -9963,8 +9983,11 @@
       <w>isXMLString</w>
       <w>isXS3Class</w>
       <w>is_A1</w>
+      <w>is_CRAN_incoming</w>
       <w>is_R1C1</w>
+      <w>is_R_CMD_check</w>
       <w>is_a</w>
+      <w>is_abs_path</w>
       <w>is_absolute_path</w>
       <w>is_ansi_tty</w>
       <w>is_ascii</w>
@@ -10033,6 +10056,7 @@
       <w>is_printer_callback</w>
       <w>is_projectile_project</w>
       <w>is_r_package</w>
+      <w>is_rel_path</w>
       <w>is_remake_project</w>
       <w>is_rstudio_project</w>
       <w>is_s3_generic</w>
@@ -10040,6 +10064,7 @@
       <w>is_separator</w>
       <w>is_shallow</w>
       <w>is_simple</w>
+      <w>is_sub_path</w>
       <w>is_subgraph_isomorphic_to</w>
       <w>is_svn_root</w>
       <w>is_tag</w>
@@ -10058,6 +10083,7 @@
       <w>is_vector_s3</w>
       <w>is_weakly_greater_than</w>
       <w>is_weakly_less_than</w>
+      <w>is_web_path</w>
       <w>is_weighted</w>
       <w>is_windows</w>
       <w>isample</w>
@@ -10924,6 +10950,7 @@
       <w>magenta</w>
       <w>magic</w>
       <w>magic.post.proc</w>
+      <w>magic_path</w>
       <w>magick</w>
       <w>magick_config</w>
       <w>magick_options</w>
@@ -11069,6 +11096,7 @@
       <w>mark.H0</w>
       <w>markRenderFunction</w>
       <w>markTime</w>
+      <w>mark_dirs</w>
       <w>markdown</w>
       <w>markdownExtensions</w>
       <w>markdownHTMLOptions</w>
@@ -11561,6 +11589,7 @@
       <w>msemObjectiveML</w>
       <w>msemObjectiveML2</w>
       <w>msemOptimizerNlm</w>
+      <w>msg_cat</w>
       <w>msg_wrap</w>
       <w>mshapiro_test</w>
       <w>msle</w>
@@ -12345,12 +12374,15 @@
       <w>pandoc.verbatim</w>
       <w>pandoc.verbatim.return</w>
       <w>pandoc_available</w>
+      <w>pandoc_citeproc_args</w>
       <w>pandoc_citeproc_convert</w>
       <w>pandoc_convert</w>
       <w>pandoc_exec</w>
       <w>pandoc_highlight_args</w>
       <w>pandoc_include_args</w>
       <w>pandoc_latex_engine_args</w>
+      <w>pandoc_lua_filter_args</w>
+      <w>pandoc_metadata_arg</w>
       <w>pandoc_options</w>
       <w>pandoc_path_arg</w>
       <w>pandoc_self_contained_html</w>
@@ -12789,6 +12821,7 @@
       <w>pkg_attach2</w>
       <w>pkg_desc</w>
       <w>pkg_env</w>
+      <w>pkg_file_lua</w>
       <w>pkg_has_src</w>
       <w>pkg_links_to_cpp11</w>
       <w>pkg_links_to_rcpp</w>
@@ -13262,9 +13295,11 @@
       <w>problems</w>
       <w>probplot</w>
       <w>proc.time</w>
+      <w>proc_kill</w>
       <w>process</w>
       <w>process.events</w>
       <w>processXInclude</w>
+      <w>process_file</w>
       <w>processingInstruction.SAX</w>
       <w>processx</w>
       <w>processx_conn_close</w>
@@ -13292,6 +13327,7 @@
       <w>proj_activate</w>
       <w>proj_get</w>
       <w>proj_path</w>
+      <w>proj_root</w>
       <w>proj_set</w>
       <w>proj_sitrep</w>
       <w>projectExtent</w>
@@ -13397,6 +13433,7 @@
       <w>pstQ</w>
       <w>pstT</w>
       <w>pstamp</w>
+      <w>psum.chisq</w>
       <w>psurvreg</w>
       <w>psych</w>
       <w>psych.misc</w>
@@ -13406,6 +13443,7 @@
       <w>ptruncnorm</w>
       <w>ptukey</w>
       <w>ptw2011.gof.test</w>
+      <w>publish_site</w>
       <w>pull</w>
       <w>pull_lower_triangle</w>
       <w>pull_triangle</w>
@@ -13572,6 +13610,7 @@
       <w>qwilcox</w>
       <w>r</w>
       <w>r.con</w>
+      <w>r.mvt</w>
       <w>r.test</w>
       <w>r2c</w>
       <w>r2chi</w>
@@ -13660,6 +13699,7 @@
       <w>rank_order.dendrogram</w>
       <w>rank_values_with_clusters</w>
       <w>raply</w>
+      <w>rappdirs</w>
       <w>rapply</w>
       <w>raster</w>
       <w>rasterFromCells</w>
@@ -14038,6 +14078,7 @@
       <w>rejectionRate</w>
       <w>rel</w>
       <w>related.predictors</w>
+      <w>relative_path</w>
       <w>relative_to</w>
       <w>release</w>
       <w>release_checks</w>
@@ -14507,6 +14548,7 @@
       <w>rollup</w>
       <w>roman2int</w>
       <w>root_criterion</w>
+      <w>root_rules</w>
       <w>rootogram</w>
       <w>roots</w>
       <w>rose</w>
@@ -14521,6 +14563,7 @@
       <w>rotated</w>
       <w>rotationMatrix</w>
       <w>rotifer</w>
+      <w>rotterdam</w>
       <w>round</w>
       <w>round.Date</w>
       <w>round.POSIXt</w>
@@ -14572,6 +14615,7 @@
       <w>roxygen2</w>
       <w>roxygenise</w>
       <w>roxygenize</w>
+      <w>royston</w>
       <w>rp2012</w>
       <w>rp99</w>
       <w>rpart</w>
@@ -14641,6 +14685,7 @@
       <w>rtools_needed</w>
       <w>rtools_path</w>
       <w>rtruncnorm</w>
+      <w>rttright</w>
       <w>rug</w>
       <w>ruginv</w>
       <w>rule</w>
@@ -15448,6 +15493,7 @@
       <w>shapiro.test</w>
       <w>shapiro_test</w>
       <w>shardsplot</w>
+      <w>shash</w>
       <w>sheetCount</w>
       <w>sheetNames</w>
       <w>sheetVisibility</w>
@@ -15655,6 +15701,8 @@
       <w>sinpi</w>
       <w>sir</w>
       <w>site_config</w>
+      <w>site_config_dir</w>
+      <w>site_data_dir</w>
       <w>site_generator</w>
       <w>site_resources</w>
       <w>sizeDiss</w>
@@ -15755,6 +15803,7 @@
       <w>smooth.construct.ts.smooth.spec</w>
       <w>smooth.construct2</w>
       <w>smooth.f</w>
+      <w>smooth.info</w>
       <w>smooth.spline</w>
       <w>smooth2random</w>
       <w>smoothColors</w>
@@ -15913,6 +15962,7 @@
       <w>split_labels</w>
       <w>split_lines</w>
       <w>split_path</w>
+      <w>split_source</w>
       <w>splitpb</w>
       <w>splom</w>
       <w>splsda</w>
@@ -18089,6 +18139,7 @@
       <w>urlModal</w>
       <w>url_absolute</w>
       <w>url_escape</w>
+      <w>url_filename</w>
       <w>url_ok</w>
       <w>url_parse</w>
       <w>url_relative</w>
@@ -18211,8 +18262,12 @@
       <w>userDictionariesPath</w>
       <w>userIdentity</w>
       <w>user_agent</w>
+      <w>user_cache_dir</w>
+      <w>user_config_dir</w>
+      <w>user_data_dir</w>
       <w>user_ids</w>
       <w>user_lib</w>
+      <w>user_log_dir</w>
       <w>user_na_to_na</w>
       <w>uses_testthat</w>
       <w>usethis</w>
@@ -18247,6 +18302,7 @@
       <w>validRow</w>
       <w>validSlotNames</w>
       <w>validUTF8</w>
+      <w>valid_syntax</w>
       <w>valid_udunits</w>
       <w>valid_udunits_prefixes</w>
       <w>validate</w>
