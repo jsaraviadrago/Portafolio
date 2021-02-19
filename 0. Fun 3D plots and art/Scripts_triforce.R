@@ -1,17 +1,17 @@
-library(ggplot2)
-library(data.table)
+library(sf)
+# Coordinate seperate in grids for simplicity
+#x <- c(0,1,2,3,1,2,4)
+#y <- c(0,3,0,3,3,6,0)
 
-dt.triangle <- data.table(group = c(1,1,1), 
-                          polygon.x = c(2,4,3), 
-                          polygon.y = c(1,1,3))
+# Plotting with grids so I can have an idea of measurement
+#plot(x,y)
 
-p <- ggplot()
-p <- p + geom_polygon(
-  data = dt.triangle
-  ,aes(
-    x=polygon.x
-    ,y=polygon.y
-    ,group=group
-  )
-)
-p
+# Creating the triforce
+multipoint <-  st_multipoint(matrix(c(0,1,2,3,1,2,4,0,3,0,3,3,6,0),
+                                    ncol = 2))
+
+# Creating the polygon
+polyg <-  st_cast(multipoint, "POLYGON")
+
+# Plotting the 
+plot(polyg, col = "Gold")
