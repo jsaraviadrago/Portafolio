@@ -34,6 +34,9 @@ db_bplayer['Vio_jugador'] = db_bplayer['Vio_jugador'].replace('0', 'Vieron a tod
 # Revisar los descriptivos que vieron todos
 Vio_todos = ["Vieron a todos"]
 db_bplayer_allwatch = db_bplayer[db_bplayer.Vio_jugador.isin(Vio_todos)]
+rows = len(db_bplayer_allwatch.index)
+print(rows)
+
 
 # Generar variables para descriptivos especificos
 def descriptivos():
